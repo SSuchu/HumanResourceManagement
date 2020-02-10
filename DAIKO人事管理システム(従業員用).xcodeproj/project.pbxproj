@@ -84,6 +84,7 @@
 		9795E91D23E98063009B7EE4 /* NCMB_Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9795E8D823E98063009B7EE4 /* NCMB_Info.plist */; };
 		9795E92123E9A788009B7EE4 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9795E92023E9A788009B7EE4 /* MainViewController.swift */; };
 		979B338623E9CD40005EC2BC /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 979B338523E9CD40005EC2BC /* LoginViewController.swift */; };
+		97B499A223EEED2D00396457 /* Label_Custom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97B499A123EEED2D00396457 /* Label_Custom.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -167,6 +168,7 @@
 		9795E8D823E98063009B7EE4 /* NCMB_Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = NCMB_Info.plist; sourceTree = "<group>"; };
 		9795E92023E9A788009B7EE4 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		979B338523E9CD40005EC2BC /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		97B499A123EEED2D00396457 /* Label_Custom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Label_Custom.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -203,6 +205,7 @@
 				9795E87723E97FEF009B7EE4 /* SceneDelegate.swift */,
 				9795E87923E97FEF009B7EE4 /* ViewController.swift */,
 				9795E87B23E97FEF009B7EE4 /* Main.storyboard */,
+				97B499A123EEED2D00396457 /* Label_Custom.swift */,
 				9795E92023E9A788009B7EE4 /* MainViewController.swift */,
 				979B338523E9CD40005EC2BC /* LoginViewController.swift */,
 				9795E87E23E97FF1009B7EE4 /* Assets.xcassets */,
@@ -493,6 +496,7 @@
 				9795E8FE23E98063009B7EE4 /* NCMBRelation.swift in Sources */,
 				9795E90023E98063009B7EE4 /* NCMBFieldTypeConverter.swift in Sources */,
 				9795E90123E98063009B7EE4 /* NCMBFieldTypeUtil.swift in Sources */,
+				97B499A223EEED2D00396457 /* Label_Custom.swift in Sources */,
 				9795E90A23E98063009B7EE4 /* NCMBRequestPasswordResetService.swift in Sources */,
 				9795E8E123E98063009B7EE4 /* NCMBRequestExecutorFactory.swift in Sources */,
 				9795E8FB23E98063009B7EE4 /* NCMBAddRelationOperator.swift in Sources */,
