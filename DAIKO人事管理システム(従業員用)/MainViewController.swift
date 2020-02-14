@@ -8,52 +8,20 @@
 
 import UIKit
 
-enum BorderPosition {
-    case top
-    case left
-    case right
-    case bottom
-}
+class MainViewControler: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource{
+    //let object: NCMBObject = NCMBObject(className: "UEzpMJc2f96fBmxW")
+    var dayTime:Bool = true
+    var unachievedReason:String = ""
 
-//UIViewで特定の場所でborderをつける拡張
-extension UIView {
-    /// 特定の場所にborderをつける
-    ///
-    /// - Parameters:
-    ///   - width: 線の幅
-    ///   - color: 線の色
-    ///   - position: 上下左右どこにborderをつけるか
-    func addBorder(width: CGFloat, color: UIColor, position: BorderPosition) {
-
-        let border = CALayer()
-
-        switch position {
-        case .top:
-            border.frame = CGRect(x: 0, y: 0, width: self.frame.width, height: width)
-            border.backgroundColor = color.cgColor
-            self.layer.addSublayer(border)
-        case .left:
-            border.frame = CGRect(x: 0, y: 0, width: width, height: self.frame.height)
-            border.backgroundColor = color.cgColor
-            self.layer.addSublayer(border)
-        case .right:
-            print(self.frame.width)
-
-            border.frame = CGRect(x: self.frame.width - width, y: 0, width: width, height: self.frame.height)
-            border.backgroundColor = color.cgColor
-            self.layer.addSublayer(border)
-        case .bottom:
-            border.frame = CGRect(x: 0, y: self.frame.height - width, width: self.frame.width, height: width)
-            border.backgroundColor = color.cgColor
-            self.layer.addSublayer(border)
-        }
-    }
-}
-
-
-class MainViewControler: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, UITableViewDelegate, UITableViewDataSource {
-    let object: NCMBObject = NCMBObject(className: "UEzpMJc2f96fBmxW")
+    
  
+    //SelectViewControllerからの値をもらう
+    var object:NCMBObject!
+    var argStringMachine = ""
+    var argStringItem = ""
+    @IBOutlet weak var MachineLabel: Label_Custom!
+    @IBOutlet weak var ItemLabel: Label_Custom!
+    
     //継承追加注意
     @IBOutlet weak var dekidaka: UILabel!
     override func viewDidLayoutSubviews() {
@@ -88,10 +56,6 @@ class MainViewControler: UIViewController, UIPickerViewDelegate, UIPickerViewDat
     }
     
     //↓設備と整備品のPickerView作成
-    //設備
-    @IBOutlet weak var MachineTextField: UITextField!
-    //製品名
-    @IBOutlet weak var ItemTextField: UITextField!
     //日付
     @IBOutlet weak var Days: UILabel!
     //生産数
@@ -110,8 +74,7 @@ class MainViewControler: UIViewController, UIPickerViewDelegate, UIPickerViewDat
     
     
     
-    var pickerView: UIPickerView = UIPickerView()
-    var pickerView2: UIPickerView = UIPickerView()
+    
     var pickerViewTo9: UIPickerView = UIPickerView()
     var pickerViewTo10: UIPickerView = UIPickerView()
     var pickerViewTo11: UIPickerView = UIPickerView()
@@ -126,17 +89,19 @@ class MainViewControler: UIViewController, UIPickerViewDelegate, UIPickerViewDat
     
     
     var arrForDisplay:[String] = [String]()
-    let list1: [String] = ["Select" ,"Machine1", "Machine2", "Machine3"]
-    let list2: [String] = ["Select" ,"Item1", "Item2", "Item3"]
     let listItem: [String] = ["0","1","2","3","4","5","6","7","8","9","10"]
+    
+    
+    @IBAction func RankingBtn(_ sender: UIButton) {
+        self.performSegue(withIdentifier: "toRanking", sender: nil)
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        //MachineとItemの値もらい
+        MachineLabel.text = argStringMachine
+        ItemLabel.text = argStringItem
         //ピッカー設定
-        pickerView.delegate = self
-        pickerView.dataSource = self
-        pickerView2.delegate = self
-        pickerView2.dataSource = self
         pickerViewTo9.delegate = self
         pickerViewTo9.dataSource = self
         pickerViewTo10.delegate = self
@@ -166,10 +131,6 @@ class MainViewControler: UIViewController, UIPickerViewDelegate, UIPickerViewDat
         let doneItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(done))
         toolbar.setItems([spacelItem, doneItem], animated: true)
         // インプットビュー設定
-        MachineTextField.inputView = pickerView
-        MachineTextField.inputAccessoryView = toolbar
-        ItemTextField.inputView = pickerView2
-        ItemTextField.inputAccessoryView = toolbar
         to9TextField.inputView = pickerViewTo9
         to9TextField.inputAccessoryView = toolbar
         to10TextField.inputView = pickerViewTo10
@@ -222,22 +183,29 @@ class MainViewControler: UIViewController, UIPickerViewDelegate, UIPickerViewDat
         
         //ユーザー名表示
         getUserName()
+        //ノルマの表示
+        getQuota()
         
         //月日の表示
         let date = Date()
         let formatter = DateFormatter()
-        formatter.dateStyle = .medium
+        let formatterNCMB = DateFormatter()
+        formatter.dateFormat = "yyyy/MM/dd"
+        formatterNCMB.dateFormat = "yyyyMMdd"
         //formatter.timeStyle = .short
         print(formatter.string(from: date))
         Days.text = formatter.string(from: date)
         
-        //tableViewCell追加
-        employees.append(employee(name: "ソラ", to9: 15, to10: 15, to11: 15, to12: 16, to14: 14, to15: 17, to16: 15, to17: 15, to18: 14, to19: 17, to20: 15, total: 100))
-        employees.append(employee(name: "John", to9: 16, to10: 15, to11: 15, to12: 16, to14: 14, to15: 17, to16: 15, to17: 15, to18: 14, to19: 17, to20: 15, total: 100))
         
         //ncmbに登録
         let ItemNumbers = [numTo9, numTo10, numTo11, numTo12, numTo14, numTo15, numTo16, numTo17, numTo18, numTo19, numTo20]
+        object["date"] = formatterNCMB.string(from: date)
+        object["dayTime"] = dayTime
+        object["machineNumber"] = self.MachineLabel.text
         object["numberOfProducts"] = ItemNumbers
+        object["productName"] = self.ItemLabel.text
+        object["unachievedReason"] = unachievedReason
+        
         object.saveInBackground(callback: {result in
             switch result{
                 case .success:
@@ -249,71 +217,74 @@ class MainViewControler: UIViewController, UIPickerViewDelegate, UIPickerViewDat
             }
         })
         
-        
+        //背景
+        self.view.addBackground(name: "Silver_Surfer.png")
         
     }//ここまでViewDidLoad
-    
-    
-    
-    //セルの個数を指定するデリゲートメソッド（必須）
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return employees.count
-    }                               //DelegateとDataSourceをstoryboard上でviewcontrollerに繋げるの忘れない
-    //セルに値を設定するデータソースメソッド（必須）
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        // セルを取得する
-        let cell: UITableViewCell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        // セルに表示する値を設定する
-        let Name = cell.viewWithTag(1) as! UILabel
-        let To9 = cell.viewWithTag(2) as! UILabel
-        let To10 = cell.viewWithTag(3) as! UILabel
-        let To11 = cell.viewWithTag(4) as! UILabel
-        let To12 = cell.viewWithTag(5) as! UILabel
-        let To14 = cell.viewWithTag(6) as! UILabel
-        let To15 = cell.viewWithTag(7) as! UILabel
-        let To16 = cell.viewWithTag(8) as! UILabel
-        let To17 = cell.viewWithTag(9) as! UILabel
-        let To18 = cell.viewWithTag(10) as! UILabel
-        let To19 = cell.viewWithTag(11) as! UILabel
-        let To20 = cell.viewWithTag(12) as! UILabel
-        let Total = cell.viewWithTag(13) as! UILabel
-        
-        Name.text = String(employees[indexPath.row].name)
-        To9.text = String(employees[indexPath.row].to9)
-        To10.text = String(employees[indexPath.row].to10)
-        To11.text = String(employees[indexPath.row].to11)
-        To12.text = String(employees[indexPath.row].to12)
-        To14.text = String(employees[indexPath.row].to14)
-        To15.text = String(employees[indexPath.row].to15)
-        To16.text = String(employees[indexPath.row].to16)
-        To17.text = String(employees[indexPath.row].to17)
-        To18.text = String(employees[indexPath.row].to18)
-        To19.text = String(employees[indexPath.row].to19)
-        To20.text = String(employees[indexPath.row].to20)
-        Total.text = String(employees[indexPath.row].total)
-        
-        return cell
-    }
     
     
     //↓ユーザー情報の取得
     var text:String? = nil
     let currentUser = NCMBUser.currentUser
     @IBOutlet weak var UserName: UILabel!
+    @IBOutlet weak var UserLabel: Label_Custom!
     func getUserName(){
         if ((currentUser) != nil) {
             UserName.text = currentUser?.userName
+            UserLabel.text = currentUser?.userName
         }else{
             UserName.text = "ログインできていません。"
         }
     }
     
+    //ノルマ表示
+    @IBOutlet weak var quotaTo9: Label_Custom!
+    @IBOutlet weak var quotaTo10: Label_Custom!
+    @IBOutlet weak var quotaTo11: Label_Custom!
+    @IBOutlet weak var quotaTo12: Label_Custom!
+    @IBOutlet weak var quotaTo14: Label_Custom!
+    @IBOutlet weak var quotaTo15: Label_Custom!
+    @IBOutlet weak var quotaTo16: Label_Custom!
+    @IBOutlet weak var quotaTo17: Label_Custom!
+    @IBOutlet weak var quotaTo18: Label_Custom!
+    @IBOutlet weak var quotaTo19: Label_Custom!
+    @IBOutlet weak var quotaTo20: Label_Custom!
+    @IBOutlet weak var quotaTotal: Label_Custom!
+    func getQuota(){
+       // let objectQuota : NCMBObject = NCMBObject(className: "Quota")
+        var query : NCMBQuery<NCMBObject> = NCMBQuery.getQuery(className: "Quota")
+        query.where(field: "productName", equalTo: self.ItemLabel.text!)
+        var recs:[Int] = [Int]()
+        query.findInBackground(callback: { result in
+            switch result {
+            case let .success(array):
+                recs = array[0]["Quota"]!
+                DispatchQueue.main.async {
+                self.quotaTo9.text = String(recs[0])
+                self.quotaTo10.text = String(recs[1])
+                self.quotaTo11.text = String(recs[2])
+                self.quotaTo12.text = String(recs[3])
+                self.quotaTo14.text = String(recs[4])
+                self.quotaTo15.text = String(recs[5])
+                self.quotaTo16.text = String(recs[6])
+                self.quotaTo17.text = String(recs[7])
+                self.quotaTo18.text = String(recs[8])
+                self.quotaTo19.text = String(recs[9])
+                self.quotaTo20.text = String(recs[10])
+                self.quotaTotal.text = String(recs[0]+recs[1]+recs[2]+recs[3]+recs[4]+recs[5]+recs[6]+recs[7]+recs[8]+recs[9]+recs[10])
+                }
+                       print("取得に成功しました 件数: \(array.count)")
+            case let .failure(error):
+                       print("取得に失敗しました: \(error)")            }
+        })
+        
+        
+        
+    }
+    
+    
     //決定ボタン押下時
     @objc func done() {
-        MachineTextField.endEditing(true)
-        MachineTextField.text = "\(list1[pickerView.selectedRow(inComponent: 0)])"
-        ItemTextField.endEditing(true)
-        ItemTextField.text = "\(list2[pickerView2.selectedRow(inComponent: 0)])"
         to9TextField.endEditing(true)
         to9TextField.text = "\(listItem[pickerViewTo9.selectedRow(inComponent: 0)])"
         to10TextField.endEditing(true)
@@ -345,10 +316,6 @@ class MainViewControler: UIViewController, UIPickerViewDelegate, UIPickerViewDat
     // ドラムロールの行数
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         switch pickerView {
-        case ItemTextField.inputView:
-            return list2.count
-        case MachineTextField.inputView:
-            return list1.count
         case to9TextField.inputView:
             return listItem.count
         case to10TextField.inputView:
@@ -385,10 +352,6 @@ class MainViewControler: UIViewController, UIPickerViewDelegate, UIPickerViewDat
     // ドラムロールの各タイトル
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         switch pickerView {
-        case ItemTextField.inputView:
-            return list2[row]
-        case MachineTextField.inputView:
-            return list1[row]
         case to9TextField.inputView:
             return listItem[row]
         case to10TextField.inputView:
@@ -425,12 +388,6 @@ class MainViewControler: UIViewController, UIPickerViewDelegate, UIPickerViewDat
     // ドラムロール選択時
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         switch pickerView {
-        case ItemTextField.inputView:
-            self.ItemTextField.text = list2[row]
-            self.viewDidLoad()
-        case MachineTextField.inputView:
-            self.MachineTextField.text = list1[row]
-            self.viewDidLoad()
         case to9TextField.inputView:
             self.to9TextField.text = listItem[row]
             self.viewDidLoad()

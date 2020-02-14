@@ -32,6 +32,8 @@ class ViewController: UIViewController {
          
         // 設定した画像をスクリーンに表示する
         self.view.addSubview(imageSample)
+        
+        self.view.addBackground(name: "Silver_Surfer.png")
 
     }
     

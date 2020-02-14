@@ -13,7 +13,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // APIキーの設定とSDK初期化
-        NCMB.initialize(applicationKey: "c9693e0ef60dc207924df2db58a95774ccd0501220951f19632767965cebb443", clientKey: "e656dd864ebfcc5acb456c75ebcd841b73a0bc0408a9894c6c32c53d6ca7ae2f");
+        NCMB.initialize(applicationKey: "37a36da2c80c54cfa6fba73e906124381b6fa3c319939e42ae5e067c26d13784", clientKey: "2c8e962170dbe7a82680e15aeb5fe59fa55d48e4d0998645fc96cbaa82c9ddda");
         // ↓　ここにサンプルコードを実装　↓
 
         return true

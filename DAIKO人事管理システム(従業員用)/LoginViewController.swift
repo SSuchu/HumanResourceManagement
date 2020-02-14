@@ -17,9 +17,8 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var passwordTextField: UITextField!
     
     //初期ログアウト化
-    var flag = 0
+    
     override func viewDidLoad() {
-        flag += 1
         NCMBUser.logOutInBackground(callback: { result in
             switch result {
                 case .success:
@@ -38,6 +37,7 @@ class LoginViewController: UIViewController {
                     print("ログアウトに失敗しました: \(error)")
             }
         })
+        self.view.addBackground(name: "Silver_Surfer.png")
     }
     
     
@@ -109,7 +109,7 @@ class LoginViewController: UIViewController {
                     // ログインに成功した場合の処理
                     print("ログインに成功しました")
                     DispatchQueue.main.sync {
-                        self.performSegue(withIdentifier: "toMain", sender: nil)
+                        self.performSegue(withIdentifier: "toSelect", sender: nil)
                     }
                     
 
